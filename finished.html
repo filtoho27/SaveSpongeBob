@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>猜數字搶救海綿寶寶</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        .row {
+            visibility: hidden;
+        }
+
+        #allDiv {
+            background-image: url("搶救海綿.jpg");
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        #topDiv{
+            background-image: url("ocean3.jpg");
+            min-height: 500px;
+        }
+        #bottomDiv {
+            background-image: url("ocean3bottom.jpg");
+        }
+
+        .left20 {
+            height: 18%;
+            width: 300px;
+            margin: 0px 0px 0px auto;
+        }
+
+        .left20 button {
+            font-size: 40px;
+            margin: 5px 13px 5px 13px;
+        }
+
+
+        .right20,
+        .right60 {
+            margin: 5px auto 5px 0px;
+        }
+
+        .right20 {
+            height: 18%;
+        }
+
+        .right60 {
+            height: 64%;
+        }
+
+
+        #ansNumDiv {
+            font-size: 60px;
+            font-weight: bolder;
+        }
+
+        #getNumBtn {
+            font-size: 40px;
+        }
+
+        #guessNumDiv {
+            font-size: 90px;
+        }
+
+        #result2{
+            color:#007bff;
+        }
+
+        .right20 div {
+            display: inline-block;
+        }
+
+        #showResult div {
+            display: inline-block;
+        }
+
+        #showResult {
+            font-size: 30px;
+            font-weight: bolder;
+            overflow: auto;
+            height: 260px;
+        }
+
+        img {
+            position: absolute;
+            bottom: 0px;
+        }
+
+        .modal-title,.modal-body{
+            font-family:Microsoft JhengHei;
+        }
+        .modal-title{
+            font-size: 30px;
+            font-weight: bolder;
+        }
+        .modal-content{
+            color: #17a2b8;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid h-100" id="allDiv" onclick="startGame()">
+        <audio id="backgroundMusic" src="backgroundMusic.mp3"></audio>
+        <audio id="spongeLaugh" src="spongeLaugh.mp3"></audio>
+        <audio id="gameOver" src="gameOver.mp3"></audio>
+        <audio id="buttonSound" src="buttonSound.mp3"></audio>
+
+        <div class="row h-75" id="topDiv">
+
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+                aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalCenterTitle">
+                                <!-- content -->
+                            </h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- content -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- modal -->
+
+
+            <div class="col-6" id="leftDiv">
+                <div class="left20">
+                    <button onclick="submitNum()" id="submitNumBtn" class="btn btn-info">SUBMIT NUM</button>
+                    <span id="textDiv" class="badge badge-dark"></span>
+                </div>
+                <div class="left20">
+                    <button onclick="numBtn('7');this.style.visibility='hidden'" id=7
+                        class="btn btn-info">&nbsp7&nbsp</button>
+                    <button onclick="numBtn('8');this.style.visibility='hidden'" id=8
+                        class="btn btn-info">&nbsp8&nbsp</button>
+                    <button onclick="numBtn('9');this.style.visibility='hidden'" id=9
+                        class="btn btn-info">&nbsp9&nbsp</button>
+                </div>
+                <div class="left20">
+                    <button onclick="numBtn('4');this.style.visibility='hidden'" id=4
+                        class="btn btn-info">&nbsp4&nbsp</button>
+                    <button onclick="numBtn('5');this.style.visibility='hidden'" id=5
+                        class="btn btn-info">&nbsp5&nbsp</button>
+                    <button onclick="numBtn('6');this.style.visibility='hidden'" id=6
+                        class="btn btn-info">&nbsp6&nbsp</button>
+                </div>
+                <div class="left20">
+                    <button onclick="numBtn('1');this.style.visibility='hidden'" id=1
+                        class="btn btn-info">&nbsp1&nbsp</button>
+                    <button onclick="numBtn('2');this.style.visibility='hidden'" id=2
+                        class="btn btn-info">&nbsp2&nbsp</button>
+                    <button onclick="numBtn('3');this.style.visibility='hidden'" id=3
+                        class="btn btn-info">&nbsp3&nbsp</button>
+                </div>
+                <div class="left20">
+                    <button onclick="numBtn('0');this.style.visibility='hidden'" id=0
+                        class="btn btn-info">&nbsp0&nbsp</button>
+                    <button onclick="clearNum()" id="clearNumBtn" class="btn btn-info">&nbspCLEAR&nbsp</button>
+                </div>
+            </div>
+
+            <div class="col-6" id="rightDiv">
+                <div class="right20">
+                    <div>
+                        <button onclick="getNum()" id="getNumBtn" class="btn btn-primary">&nbsp&nbsp&nbspSTART&nbsp&nbsp&nbsp</button>
+                    </div>
+                    <div id="ansNumDiv"></div>
+                </div>
+                <div class="right20">
+                    <div id="guessNumDiv"></div>
+                </div>
+                <div class="right60">
+                    <div id="showResult">
+                        <div id="result1"></div>
+                        <div id="result2"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row h-25" id="bottomDiv">
+            <img id="changeImg1" src="" alt="">
+            <img id="changeImg2" src="" alt="">
+        </div>
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous">
+    </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous">
+    </script>
+
+    <script>
+        // 點擊初始畫面顯示遊戲
+        function startGame() {
+            document.getElementById("topDiv").style.visibility = "visible";
+            document.getElementById("bottomDiv").style.visibility = "visible";
+        }
+
+        function getNum() {
+            document.getElementById("buttonSound").play();
+            document.getElementById("backgroundMusic").play();
+            do {
+                var a1 = (Math.floor(Math.random() * 10)).toString();
+                var a2 = (Math.floor(Math.random() * 10)).toString();
+                var a3 = (Math.floor(Math.random() * 10)).toString();
+                var a4 = (Math.floor(Math.random() * 10)).toString();
+            } while (a1 == a2 || a1 == a3 || a1 == a4 || a2 == a3 || a2 == a4 || a3 == a4);
+            document.getElementById("ansNumDiv").innerHTML = a1 + a2 + a3 + a4;
+            console.log(document.getElementById("ansNumDiv").innerHTML);
+            document.getElementById("ansNumDiv").style.visibility = "hidden";
+            document.getElementById("getNumBtn").style.visibility = "hidden";
+            document.getElementById("result1").innerHTML = "";
+            document.getElementById("result2").innerHTML = "";
+            
+
+            //海綿寶寶
+            var ch1 = document.getElementById("changeImg1");
+            ch1.src = "海綿追.gif";
+
+            var step1 = 500;
+            var flag1 = setInterval(goToRight1, 50);
+
+            function goToRight1() {
+                if (step1 == 1030) {
+                    clearInterval(flag1);
+                } else {
+                    step1++;
+                    ch1.style.left = step1 + "px";
+                }
+            };
+            //派大星
+            var ch2 = document.getElementById("changeImg2");
+            ch2.src = "派大追.gif";
+
+            var step2 = 0;
+            var flag2 = setInterval(goToRight2, 30);
+
+            function goToRight2() {
+                if (step2 == 920) {
+                    clearInterval(flag1);
+                    clearInterval(flag2);
+                    $(".modal-title").text("可憐海綿 :(");
+                    $(".modal-body").text("絕對是你害的");
+                    $("#exampleModalCenter").modal('show');
+                    document.getElementById("result1").innerHTML = "";
+                    document.getElementById("result2").innerHTML = "";
+                    document.getElementById("ansNumDiv").style.visibility = "visible";
+                    document.getElementById("getNumBtn").style.visibility = "visible";
+                    document.getElementById("changeImg1").src = "海綿哭.png";
+                    document.getElementById("changeImg2").src = "派大讚.png";
+                    document.getElementById("gameOver").play();
+                    document.getElementById("backgroundMusic").pause();
+                    document.getElementById("backgroundMusic").currentTime = 0;
+                } else {
+                    step2++;
+                    ch2.style.left = step2 + "px";
+                }
+                if (document.getElementById("ansNumDiv").style.visibility == "visible") {
+                    clearInterval(flag1);
+                    clearInterval(flag2);
+                }
+            }
+        };
+
+        function numBtn(num) {
+            document.getElementById("buttonSound").play();
+            document.getElementById("guessNumDiv").innerHTML =
+                document.getElementById("guessNumDiv").innerHTML + num;
+        };
+        //打錯時可清除數字
+        function clearNum() {
+            document.getElementById("buttonSound").play();
+            document.getElementById("guessNumDiv").innerHTML = "";
+            for (var i = 0; i <= 9; i++) {
+                document.getElementById(i).style.visibility = "visible";
+            };
+        };
+
+        function submitNum() {
+            document.getElementById("buttonSound").play();
+            var A = 0;
+            var B = 0;
+            //如果輸入數字等於四
+            if ((document.getElementById("guessNumDiv").innerHTML).length == 4) {
+                //判斷0A0B 顯示0A0B
+                for (var i = 0; i < 4; i++) {
+                    if ((document.getElementById("ansNumDiv").innerHTML).charAt(i) ==
+                        (document.getElementById("guessNumDiv").innerHTML).charAt(i)) {
+                        A++;
+                    } else if ((document.getElementById("ansNumDiv").innerHTML).indexOf((document.getElementById(
+                            "guessNumDiv").innerHTML).charAt(i)) >= 0) {
+                        B++;
+                    };
+                };
+                document.getElementById("result1").innerHTML += document.getElementById("guessNumDiv").innerHTML +
+                    "<br>";
+                document.getElementById("result2").innerHTML += A + "A" + B + "B" + "<br>";
+                //如果輸入數字不等於四
+            } else {
+                //不判斷0A0B 顯示four numbers only
+                document.getElementById("result1").innerHTML += document.getElementById("guessNumDiv").innerHTML +
+                    "<br>";
+                document.getElementById("result2").innerHTML += "4 Numbers Only" + "<br>";
+            };
+            //0~9按鈕恢復顯示
+            for (var i = 0; i <= 9; i++) {
+                document.getElementById(i).style.visibility = "visible";
+            };
+
+            document.getElementById("guessNumDiv").innerHTML = "";
+            //判斷是否猜對
+            if ((document.getElementById("result2").innerHTML).indexOf("4A0B") >= 0) {
+                document.getElementById("spongeLaugh").play();
+                document.getElementById("backgroundMusic").pause();
+                document.getElementById("backgroundMusic").currentTime = 0;
+                $(".modal-title").text("海綿得救 :)");
+                $(".modal-body").text("終於擺脫難纏的派大星");
+                $("#exampleModalCenter").modal('show');
+                document.getElementById("result1").innerHTML = "";
+                document.getElementById("result2").innerHTML = "";
+                document.getElementById("ansNumDiv").style.visibility = "visible";
+                document.getElementById("getNumBtn").style.visibility = "visible";
+                document.getElementById("changeImg1").src = "海綿讚.gif";
+                document.getElementById("changeImg2").src = "派大哭.png";
+            };
+        }
+    </script>
+
+</body>
+
+</html>
